@@ -9,8 +9,8 @@ report.generate({
         },
         platform:
         {
-            name: "Windows", 
+            name: "Windows",
             version: "11"
-        } 
+        }
     }
 })
