@@ -1,5 +1,6 @@
 import { Given, When, Then, Before } from "cypress-cucumber-preprocessor/steps";
-const homeSaucePage = require ('../../pages/homeSaucePage')
+import loginPage from "../../pages/loginPage";
+const homeSaucePage = require ('../../pages/loginPage')
 
 Given('A user opens a login page', () => {
     cy.visit('/')
@@ -13,6 +14,13 @@ Given('A user opens a login page', () => {
     homeSaucePage.typePassword(password)
   })
 
+  When('A user provides incorrect credentials', (table) => {
+    table.hashes().forEach(row => {
+      loginPage.typeUsername(row.username)
+      loginPage.typePassword(row.password)
+    });
+  })
+
   And('A user clicks on the login button', () => {
     homeSaucePage.clickLogin()
   })
@@ -21,10 +29,6 @@ Given('A user opens a login page', () => {
     cy.url().should('contains', '/inventory.html')
   })
 
-  Then('A user will be receiving an incorrect login message', ()=>{
-    homeSaucePage.elements.errorMessage().should('have.text', 'Epic sadface: Username and password do not match any user in this service')
-  })
-
-  Then('A user will be receiving a locked out user message', ()=>{
-    homeSaucePage.elements.errorMessage().should('have.text', 'Epic sadface: Sorry, this user has been locked out.')
+  Then('A user will receive {string} message', (errorMessage) => {
+    homeSaucePage.elements.errorMessage().should('have.text', errorMessage)
   })
